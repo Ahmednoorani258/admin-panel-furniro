@@ -8,18 +8,23 @@ export default function Authorizer({ children }: { children: React.ReactNode }) 
   const { user, isLoaded } = useUser();
 
   useEffect(() => {
-    if (!isLoaded) return; // Wait until user data is loaded
+    if (!isLoaded) return;
 
     const role = user?.publicMetadata?.role as string | undefined;
+    console.log("User role:", role);
+    console.log("Current host:", window.location.host);
 
-    // ✅ Redirect users who are NOT "superadmin" or "admin"
+    // Check if user is not logged in or doesn't have admin roles
     if (!user || !(role === "superadmin" || role === "admin")) {
       router.replace("https://market-ready-ecommerce-app.vercel.app/");
-      return;
+    } else {
+      // Check if current host is not the admin panel
+      if (!window.location.host.includes("admin-panel-furniro.vercel.app")) {
+        router.replace("https://admin-panel-furniro.vercel.app/");
+      }
     }
   }, [isLoaded, user, router]);
 
-  // Don't render children until user data is fully loaded
   if (!isLoaded) return null;
 
   return <>{children}</>;

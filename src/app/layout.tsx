@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import CommonLayout from "@/components/CommonLayout";
-
+import Authorizer from "@/components/auth/Authorizer";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,12 +15,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
-        <body
-          className={` antialiased `}
-        >
-          <CommonLayout>{children}</CommonLayout>
-        </body>
-      </html>
+    <html lang="en">
+      <body className={` antialiased `}>
+        <ClerkProvider>
+          <Authorizer>
+            <CommonLayout>{children}</CommonLayout>
+          </Authorizer>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

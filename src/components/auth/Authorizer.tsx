@@ -20,6 +20,7 @@ export default function Authorizer({
     if (!user || role !== "superadmin") {
       router.push("/sign-in");
     }
+    router.push("/");
   }, [isLoaded, user, router]);
 
   // Don't render children until user data is loaded

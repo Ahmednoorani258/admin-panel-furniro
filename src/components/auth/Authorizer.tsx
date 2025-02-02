@@ -16,7 +16,7 @@ export default function Authorizer({
 
     const role = user?.publicMetadata?.role as string;
 
-    if (!user || role !== "superadmin" && role !== "admin") {
+    if (!user || (role !== "superadmin" && role !== "admin")) {
       router.push("https://market-ready-ecommerce-app.vercel.app/");
     } else {
       router.push("https://admin-panel-furniro.vercel.app/");

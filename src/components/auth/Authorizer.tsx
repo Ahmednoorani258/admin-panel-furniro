@@ -12,15 +12,10 @@ export default function Authorizer({ children }: { children: React.ReactNode }) 
 
     const role = user?.publicMetadata?.role as string | undefined;
 
-    // Redirect regular users to the main site
-    if (!user || (role && role !== "superadmin" && role !== "admin")) {
+    // ✅ Redirect users who are NOT "superadmin" or "admin"
+    if (!user || !(role === "superadmin" || role === "admin")) {
       router.replace("https://market-ready-ecommerce-app.vercel.app/");
-      return; // Ensure no further execution
-    }
-
-    // Redirect admins to the admin panel only if they are not already there
-    if (typeof window !== "undefined" && !window.location.href.includes("admin-panel-furniro")) {
-      router.replace("https://admin-panel-furniro.vercel.app/");
+      return;
     }
   }, [isLoaded, user, router]);
 

@@ -12,18 +12,17 @@ export default function Authorizer({
   const { user, isLoaded } = useUser();
 
   useEffect(() => {
-    // Wait for user data to load before checking role
     if (!isLoaded) return;
 
     const role = user?.publicMetadata?.role as string;
 
-    if (!user || role !== "superadmin") {
-      router.push("/sign-in");
+    if (!user || role !== "superadmin" && role !== "admin") {
+      router.push("https://market-ready-ecommerce-app.vercel.app/");
+    } else {
+      router.push("https://admin-panel-furniro.vercel.app/");
     }
-    router.push("/");
   }, [isLoaded, user, router]);
 
-  // Don't render children until user data is loaded
   if (!isLoaded) return null;
 
   return <>{children}</>;

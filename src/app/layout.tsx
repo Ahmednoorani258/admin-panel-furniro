@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import CommonLayout from "@/components/CommonLayout";
-import Authorizer from "@/components/auth/Authorizer";
+// import Authorizer from "@/components/auth/Authorizer";
 import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
@@ -15,14 +15,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={` antialiased `}>
-        <ClerkProvider>
-          <Authorizer>
-            <CommonLayout>{children}</CommonLayout>
-          </Authorizer>
-        </ClerkProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={` antialiased `}>
+          {/* <Authorizer> */}
+          <CommonLayout>{children}</CommonLayout>
+          {/* </Authorizer> */}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -1,31 +1,36 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 
 export default function Authorizer({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { user, isLoaded } = useUser();
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    const checkAccess = async () => {
+      try {
+        const res = await fetch("/api/check-role");
 
-    const role = user?.publicMetadata?.role as string | undefined;
-    console.log("User role:", role);
-    console.log("Current host:", window.location.host);
-
-    // Check if user is not logged in or doesn't have admin roles
-    if (!user || !(role === "superadmin" || role === "admin")) {
-      router.replace("https://market-ready-ecommerce-app.vercel.app/");
-    } else {
-      // Check if current host is not the admin panel
-      if (!window.location.host.includes("admin-panel-furniro.vercel.app")) {
-        router.replace("https://admin-panel-furniro.vercel.app/");
+        if (res.ok) {
+          setIsAuthorized(true);
+          router.push("/"); // Redirect to the homepage if authorized
+        } else {
+          setIsAuthorized(false);
+          router.push("/sign-in"); // Redirect to sign-in if not authorized
+        }
+      } catch (error) {
+        console.error("Error checking role:", error);
+        setIsAuthorized(false);
+        router.push("/sign-in"); // Redirect to sign-in on error
       }
-    }
-  }, [isLoaded, user, router]);
+    };
 
-  if (!isLoaded) return null;
+    checkAccess();
+  }, [router]);
+
+  if (isAuthorized === null) {
+    return <p>Loading...</p>;  // Optionally show a loading message while checking access
+  }
 
   return <>{children}</>;
 }

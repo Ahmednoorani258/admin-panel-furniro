@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAllProducts } from "@/sanity/queries/fetch";
-import { addProduct, ProductData } from "@/sanity/queries/addProduct";
+import { addProduct } from "@/sanity/queries/addProduct";
 import { client } from "@/sanity/lib/client";
 
 export async function GET() {
@@ -15,9 +15,9 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData(); // ✅ FormData Parse Karein
 
-    const imageFile = formData.get("image") as string ; // ✅ Image Get Karein
+    const imageFile = formData.get("image") as File | null; // ✅ Image Get Karein
 
-   const productData: ProductData = {
+   const productData = {
       productName: formData.get("productName") as string,
       productDesc: formData.get("productDesc") as string,
       productCategory: formData.get("productCategory") as string,
@@ -26,12 +26,12 @@ export async function POST(req: NextRequest) {
       productSizes: JSON.parse(formData.get("productSizes") as string),
       rating: Number(formData.get("rating")),
       discount: Number(formData.get("discount")),
-      isFeatured: formData.get("isFeatured") === "true",
+      isFeaturedProduct: formData.get("isFeatured") === "true",
       stockLevel: Number(formData.get("stockLevel")),
       image: imageFile, // 🟢 Sanity Image Reference
     };
 
-    const newProduct = await addProduct(productData);
+    const newProduct = await addProduct(productData as any); // ✅ Add Product to Sanity
 
     return NextResponse.json(
       { message: "Product added successfully!", product: newProduct },

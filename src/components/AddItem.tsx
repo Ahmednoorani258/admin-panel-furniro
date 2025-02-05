@@ -14,6 +14,8 @@ import {
 } from "./ui/select";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
+import { client } from "@/sanity/lib/client"; 
+import { toast } from "react-toastify";
 
 const AddItem = () => {
   const furnitureTags = [
@@ -41,6 +43,9 @@ const AddItem = () => {
     isFeatured: false,
     stockLevel: "",
   });
+
+  console.log("formData",formData)
+  const [loading, setLoading] = useState(false)
 
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -101,11 +106,66 @@ const AddItem = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+ 
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
+    setLoading(true);
+  
+    try {
+      const formDataToSend = new FormData();
+  
+      if (formData.image) {
+        formDataToSend.append("image", formData.image); 
+      }
+  
+    
+      formDataToSend.append("productName", formData.productName);
+      formDataToSend.append("productDesc", formData.productDesc);
+      formDataToSend.append("productCategory", formData.productCategory);
+      formDataToSend.append("productPrice", String(formData.productPrice));
+      formDataToSend.append("productTags", JSON.stringify(formData.productTags));
+      formDataToSend.append("productSizes", JSON.stringify(formData.productSizes));
+      formDataToSend.append("rating", String(formData.rating));
+      formDataToSend.append("discount", (formData.discount));
+      formDataToSend.append("isFeatured", String(formData.isFeatured));
+      formDataToSend.append("stockLevel", String(formData.stockLevel));
+  
+      // ✅ Fetch API Call: JSON NAHI FormData Send Karna Hai
+      const response = await fetch("/api/products", {
+        method: "POST",
+        body: formDataToSend, // 🟢 JSON.stringify() HATADO
+      });
+  
+      if (!response.ok) throw new Error("Failed to add product");
+  
+      const result = await response.json();
+      console.log("✅ Product added:", result);
+  
+      toast.success("Product added successfully.")
+      setFormData({
+        image: null,
+        productName: "",
+        productDesc: "",
+        productCategory: "",
+        productPrice: "",
+        productTags: [],
+        productSizes: [],
+        rating: "",
+        discount: "",
+        isFeatured: false,
+        stockLevel: "",
+      });
+    } catch (error) {
+      console.log("❌ Error adding product:", error);
+      toast.error("Failed to add product!")
+    } finally {
+      setLoading(false);
+    }
   };
-
+  
+    
+   
   return (
     <form
       onSubmit={handleSubmit}
@@ -120,6 +180,7 @@ const AddItem = () => {
           name="image"
           onChange={handleChange}
           ref={inputRef}
+          disabled={loading}
         />
         <Image
           src={
@@ -145,6 +206,7 @@ const AddItem = () => {
             placeholder="Enter Product Name"
             value={formData.productName}
             onChange={handleChange}
+            disabled={loading}
           />
         </div>
         {/* Stock Level */}
@@ -156,6 +218,7 @@ const AddItem = () => {
             placeholder="Enter Stock Level"
             value={formData.stockLevel}
             onChange={handleChange}
+            disabled={loading}
           />
         </div>
       </div>
@@ -187,6 +250,7 @@ const AddItem = () => {
             placeholder="Enter Price"
             value={formData.productPrice}
             onChange={handleChange}
+            disabled={loading}
           />
         </div>
       </div>
@@ -283,6 +347,7 @@ const AddItem = () => {
             placeholder="Enter Rating"
             value={formData.rating}
             onChange={handleChange}
+            disabled={loading}
           />
         </div>
 
@@ -295,6 +360,7 @@ const AddItem = () => {
             placeholder="Enter Discount %"
             value={formData.discount}
             onChange={handleChange}
+            disabled={loading}
           />
         </div>
       </div>
@@ -304,6 +370,7 @@ const AddItem = () => {
           name="isFeatured"
           checked={formData.isFeatured}
           onCheckedChange={(value) => handleChange(value, "isFeatured")}
+          disabled={loading}
         />
         <Label>Is Featured Product</Label>
       </div>
@@ -316,10 +383,11 @@ const AddItem = () => {
           name="productDesc"
           value={formData.productDesc}
           onChange={handleChange}
+          disabled={loading}
         />
       </div>
 
-      <Button type="submit" className="w-36 mt-2">
+      <Button type="submit" className="w-36 mt-2" disabled={loading}>
         Add
       </Button>
     </form>

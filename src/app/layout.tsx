@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+import { ClerkProvider, RedirectToSignIn } from "@clerk/nextjs";
+import { Metadata } from "next";
 import "./globals.css";
-import CommonLayout from "@/components/CommonLayout";
-// import Authorizer from "@/components/auth/Authorizer";
-import { ClerkProvider } from "@clerk/nextjs";
+// import CommonLayout from "@/components/CommonLayout";
+import Authorizer from "@/components/auth/Authorizer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,16 +11,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={` antialiased `}>
-          {/* <Authorizer> */}
-          <CommonLayout>{children}</CommonLayout>
-          {/* </Authorizer> */}
+        <body className={`antialiased`}>
+          {/* Conditionally render layout based on the route */}
+          <Authorizer>{children}</Authorizer>
         </body>
       </html>
     </ClerkProvider>

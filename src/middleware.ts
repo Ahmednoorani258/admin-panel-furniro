@@ -2,6 +2,7 @@ import { clerkMiddleware } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 export default clerkMiddleware(async (auth, req) => {
+
   const url = new URL(req.url);
 
   // Allow unauthenticated access to the sign-in page and Clerk API routes

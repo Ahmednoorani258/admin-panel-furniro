@@ -1,44 +1,54 @@
-"use client"
+"use client";
 import Image from "next/image";
 import React from "react";
 import { Menu } from "lucide-react";
-import {  SidebarTrigger } from "./ui/sidebar";
-import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
+import { SidebarTrigger } from "./ui/sidebar";
+import { useUser, UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
-  const router = useRouter()
+  const { user, isSignedIn, isLoaded } = useUser();
   const sidebarTriggerRef = React.useRef<HTMLButtonElement>(null);
 
-  const handleMenuClick = () => { 
+  const handleMenuClick = () => {
     sidebarTriggerRef.current?.click();
-  }
+  };
 
-  
   return (
-    <div className="w-full bg-gray-800 fixed top-0 z-50"> 
-      <div className=" h-16 mx-4 flex items-center justify-between">
-        <div className="flex items-center ">
-          
-          <Menu className="text-white block md:hidden cursor-pointer"  size={30}  onClick={handleMenuClick}/>
-          
+    <div className="w-full bg-gray-800 fixed top-0 z-50">
+      <div className="h-16 mx-4 flex items-center justify-between">
+        {/* Left Side: Logo & Sidebar Menu */}
+        <div className="flex items-center space-x-4">
+          {/* Mobile Menu Icon */}
+          <Menu
+            className="text-white block md:hidden cursor-pointer"
+            size={30}
+            onClick={handleMenuClick}
+            aria-label="Open Sidebar"
+          />
+          <SidebarTrigger ref={sidebarTriggerRef} className="sr-only" />
 
-          <SidebarTrigger ref={sidebarTriggerRef} className="hidden" />
+          {/* Logo */}
           <Image
             src="/assets/main-logo.svg"
-            alt="logo"
+            alt="Furniro Logo"
             width={60}
             height={60}
+            priority
             className="cursor-pointer"
           />
-          <h1 className="text-white text-2xl font-semibold ">Furniro</h1>
+          <h1 className="text-white text-2xl font-semibold">Furniro</h1>
         </div>
-        <div>
-         
 
-            <Button className=" text-gray-800 bg-[#f0d786] rounded w-[100px] p-2 hover:bg-[#f0d786]" onClick={()=>router.push("/sign-in")}>Login</Button>
-       
-        </div>
+        {/* Right Side: User Info & Profile Button */}
+        {isLoaded && isSignedIn && user && (
+          <div className="flex items-center space-x-3">
+            <span className="text-black text-lg font-bold bg-yellow-50  px-3 py-1 rounded-lg">
+              {String(user.publicMetadata?.role)}
+            </span>
+
+            <UserButton afterSwitchSessionUrl="/sign-in" />
+          </div>
+        )}
       </div>
     </div>
   );

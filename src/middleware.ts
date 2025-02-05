@@ -6,7 +6,7 @@ export default clerkMiddleware(async (auth, req) => {
   const url = new URL(req.url);
 
   // Allow unauthenticated access to the sign-in page and Clerk API routes
-  if (url.pathname.startsWith('/sign-in') || url.pathname.startsWith('/api') || url.pathname.startsWith('/_next')) {
+  if (url.pathname.startsWith('/sign-in') || url.pathname.startsWith('/unauthorized') || url.pathname.startsWith('/api') || url.pathname.startsWith('/_next')) {
     return NextResponse.next();
   }
 
@@ -21,7 +21,7 @@ export default clerkMiddleware(async (auth, req) => {
 
   // If user is authenticated but not an admin, prevent access
   if (role !== 'admin' && role !== 'superadmin') {
-    return NextResponse.redirect(new URL('/sign-in', req.url));
+    return NextResponse.redirect(new URL('/unauthorized', req.url));
   }
 
   return NextResponse.next();

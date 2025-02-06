@@ -5,49 +5,22 @@ export const order = defineType({
   type: "document",
   title: "Order",
   fields: [
-    // Reference to customer
-    defineField({
-      name: "customer",
-      type: "reference",
-      title: "Customer",
-      to: [{ type: "customer" }], // Reference the customer schema
-      validation: (Rule) => Rule.required(),
-    }),
-
-    // Array of products with quantity
+    defineField({ name: "customer", type: "reference", title: "Customer", to: [{ type: "customer" }], validation: (Rule) => Rule.required() }),
     defineField({
       name: "products",
       type: "array",
       title: "Products",
       of: [
-        defineField({
-          name: "productItem",
+        {
           type: "object",
           fields: [
-            defineField({
-              name: "product",
-              type: "reference",
-              title: "Product",
-              to: [{ type: "product" }], // Reference the product schema
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: "quantity",
-              type: "number",
-              title: "Quantity",
-              validation: (Rule) =>
-                Rule.required().min(1).error("Quantity must be at least 1"),
-            }),
+            defineField({ name: "product", type: "reference", title: "Product", to: [{ type: "product" }], validation: (Rule) => Rule.required() }),
+            defineField({ name: "quantity", type: "number", title: "Quantity", validation: (Rule) => Rule.required().min(1) }),
           ],
-        }),
+        },
       ],
-      validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .error("Order must include at least one product."),
+      validation: (Rule) => Rule.required().min(1),
     }),
-
-    // Order status
     defineField({
       name: "orderStatus",
       type: "string",
@@ -62,10 +35,8 @@ export const order = defineType({
         ],
         layout: "dropdown",
       },
-      initialValue: "pending", // Default value
+      initialValue: "pending",
     }),
-
-    // Payment method
     defineField({
       name: "paymentMethod",
       type: "string",
@@ -79,29 +50,8 @@ export const order = defineType({
       },
       validation: (Rule) => Rule.required(),
     }),
-
-    // Delivery address (referenced from customer)
-    defineField({
-      name: "deliveryAddress",
-      type: "string",
-      title: "Delivery Address",
-      description: "This will be taken from the customer's address.",
-      validation: (Rule) => Rule.required(),
-    }),
-
-    // Order date
-    defineField({
-      name: "orderDate",
-      type: "datetime",
-      title: "Order Date",
-      validation: (Rule) => Rule.required(),
-      initialValue: () => new Date().toISOString(), // Automatically set current date
-    }),
-    defineField({
-      name: "totalAmount",
-      type: "number",
-      title: "Total Amount",
-      validation: (Rule) => Rule.required().min(0),
-    }),
+    defineField({ name: "deliveryAddress", type: "string", title: "Delivery Address", validation: (Rule) => Rule.required() }),
+    defineField({ name: "orderDate", type: "datetime", title: "Order Date", validation: (Rule) => Rule.required(), initialValue: () => new Date().toISOString() }),
+    defineField({ name: "totalAmount", type: "number", title: "Total Amount", validation: (Rule) => Rule.required().min(0) }),
   ],
 });

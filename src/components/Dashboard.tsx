@@ -36,7 +36,7 @@ const Dashboard = () => {
         <div className="flex flex-1 justify-center items-center gap-3 p-3 rounded shadow-md shadow-[#f0d786] min-w-[250px] h-[125px]">
           <Image
             className="object-contain"
-            src="/assets/admin-assets/orders-icon.svg"
+            src="/assets/admin-assets/order2.png"
             alt="orders"
             width={70}
             height={70}
@@ -49,7 +49,7 @@ const Dashboard = () => {
         <div className="flex flex-1 justify-center items-center gap-3 p-3 rounded shadow-md shadow-[#f0d786] min-w-[250px] h-[125px]">
           <Image
             className="object-contain"
-            src="/assets/admin-assets/product.svg"
+            src="/assets/admin-assets/product.png"
             alt="products"
             width={70}
             height={70}
@@ -91,7 +91,7 @@ const Dashboard = () => {
                     <Button size="sm" variant="outline" className="mr-2">
                       View
                     </Button>
-                    <Button size="sm" className="bg-[#f0d786] hover:bg-[#f0d786]">
+                    <Button size="sm" className="text-black bg-[#f0d786] hover:bg-[#f0d786]">
                       Cancel
                     </Button>
                   </TableCell>

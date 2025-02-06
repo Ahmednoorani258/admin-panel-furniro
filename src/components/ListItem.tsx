@@ -34,7 +34,7 @@ const ListItem = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 4;
+  const productsPerPage = 8;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
 

@@ -17,14 +17,16 @@ export type OrderStatus =
 export type PaymentMethod = "cod" | "online";
 
 export interface Order {
-  _id: string;
-  orderStatus: OrderStatus;
-  paymentMethod: PaymentMethod;
-  deliveryAddress: string;
-  orderDate: string;
-  totalAmount: number;
-  products: OrderProduct[];
-}
+    _id: string;
+    customer: Customer; // 🟢 Full customer details included
+    orderStatus: OrderStatus;
+    paymentMethod: PaymentMethod;
+    deliveryAddress: string;
+    orderDate: string;
+    totalAmount: number;
+    products: OrderProduct[];
+  }
+  
 
 export interface Customer {
   _id: string;

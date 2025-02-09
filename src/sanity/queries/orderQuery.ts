@@ -1,27 +1,26 @@
-const orderQuery = `*[_type == "customer"]{
+export const query = `*[_type == "order"]{
   _id,
-  name,
-  email,
-  phoneNumber,
-  address,
-  city,
-  zipCode,
-  companyName,
-  country,
-  "orders": orders[]->{
+  orderStatus,
+  paymentMethod,
+  deliveryAddress,
+  orderDate,
+  totalAmount,
+  "customer": customer->{
     _id,
-    orderStatus,
-    paymentMethod,
-    deliveryAddress,
-    orderDate,
-    totalAmount,
-    "products": products[]{
-      quantity,
-      "product": product->{
-        _id,
-        name
-      }
+    name,
+    email,
+    phoneNumber,
+    address,
+    city,
+    zipCode,
+    country,
+    companyName
+  },
+  "products": products[]{
+    quantity,
+    "product": product->{
+      _id,
+      name
     }
   }
-}
-`
+}`;

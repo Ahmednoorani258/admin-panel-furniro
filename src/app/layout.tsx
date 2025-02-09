@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import "./globals.css";
 // import CommonLayout from "@/components/CommonLayout";
 import Authorizer from "@/components/auth/Authorizer";
+import { SanityLive } from "@/sanity/lib/live";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,6 +21,7 @@ export default function RootLayout({
           <Authorizer>{children}</Authorizer>
         </body>
       </html>
+      <SanityLive/>
     </ClerkProvider>
   );
 }
